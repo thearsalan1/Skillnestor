@@ -1,0 +1,22 @@
+# Node modules 
+backend/node_modules/
+
+# Environment variables
+backend/.env
+
+# Logs
+backend/logs/
+*.log
+npm-debug.log*
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# IDE folders
+.vscode/
+.idea/
+
+# Build artifacts (if any)
+backend/dist/
+backend/build/
