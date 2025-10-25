@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 const SubjectSchema = new mongoose.Schema(
   {
     title: {
@@ -17,8 +16,14 @@ const SubjectSchema = new mongoose.Schema(
       ref: "Course",
       required: [true, "Subject refrence is required"],
     },
+    pdfs: [
+      {
+        originalname: String,
+        url: String,
+        uploadedAt: { type: Date, default: Date.now },
+      },
+    ],
   },
   { timestamps: true }
 );
-
 module.exports = mongoose.model("Subject", SubjectSchema);
