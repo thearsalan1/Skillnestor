@@ -1,37 +1,44 @@
 📚 SkillNester LMS Backend
 
-
 ![Node.js](https://img.shields.io/badge/Node.js-18.x-green?logo=node.js)
 ![Express](https://img.shields.io/badge/Express.js-Backend-lightgrey?logo=express)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Database-brightgreen?logo=mongodb)
 ![JWT Auth](https://img.shields.io/badge/Auth-JWT-blue?logo=jsonwebtokens)
 
-A modular, scalable backend for a Learning Management System (LMS), built with Express, MongoDB, and emotional precision. Designed to handle courses, subjects, enrollment, access control, and more — with clean APIs and dramatic flair.
+
+Node.js Express MongoDB JWT Auth
+A modular, scalable backend for the SkillNester Learning Management System (LMS) — built with Express, MongoDB, and emotional precision. Designed to manage courses, subjects, PDF resources, and access control through clean, secure APIs.
 
 🚀 Features
 - Course Management
-Create, retrieve, and delete courses with relational subject mapping.
+- Create, retrieve, and delete courses
+- Subjects are relationally mapped to courses
 - Subject Module
-Create subjects linked to courses, fetch by course ID, and delete with automatic cleanup.
+- Create subjects linked to courses
+- Fetch subjects by course ID
+- Delete subjects with automatic cleanup
+- PDF Upload System
+- Upload multiple PDFs per subject
+- Store metadata (originalname, url, uploadedAt)
+- Delete PDFs by ID with file system cleanup
 - Relational Integrity
-Subjects are pushed into the course’s subjects array on creation and removed on deletion.
+- Subjects are pushed into the course’s subjects array on creation
+- Automatically removed on deletion
 - Protected Routes
-Admin-only access for sensitive operations using middleware guards.
+- Admin-only access for sensitive operations
+- JWT-based authentication with role-based middleware
 - Modular Structure
-Clean separation of routes, controllers, models, and middleware.
+- Clean separation of concerns: routes, controllers, models, middleware
 
 🌐 Frontend Integration
-This backend is built to integrate with a dedicated frontend application, which will be developed and merged in future stages of the SkillNester project. The backend APIs are structured to support seamless communication with the frontend for a complete LMS experience.
+This backend is designed to integrate with a dedicated frontend application (React-based), which will be developed in future stages of the SkillNester project. All APIs are structured for seamless communication and secure data flow.
 
 🛠️ Tech Stack
-
-**Server:** Express.js  
-**Database:** MongoDB + Mongoose  
-**Authentication:** JWT + Role-based Middleware  
-**Testing:** Postman  
-**Deployment-ready:** Vercel (for frontend), Render or Railway (for backend)
-
-
+- Server: Express.js
+- Database: MongoDB + Mongoose
+- Authentication: JWT + Role-based Middleware
+- Testing: Postman
+- Deployment-ready: Vercel (frontend), Render or Railway (backend)
 
 📁 Folder Structure
 skillnester/
@@ -50,6 +57,7 @@ skillnester/
 📦 Installation
 cd skillnester
 npm install
+
 cd backend
 npm install
 npm run dev
@@ -57,26 +65,26 @@ npm run dev
 
 
 📮 API Endpoints
-Courses
+📘 Courses
 - POST /api/courses — Create course (Admin only)
 - GET /api/courses — Get all courses
 - GET /api/courses/:id — Get course by ID
 - DELETE /api/courses/:id — Delete course (Admin only)
-Subjects
+📗 Subjects
 - POST /api/subjects — Create subject (Admin only)
 - GET /api/subjects — Get all subjects (Admin only)
 - GET /api/subjects/course/:courseId — Get subjects by course
 - DELETE /api/subjects/:id — Delete subject (Admin only)
+📄 PDFs
+- POST /api/pdf/:subjectId — Upload PDF to subject (Admin only)
+- GET /api/pdf/:subjectId — Get PDFs for a subject (Authenticated users)
+- GET /api/pdf/admin/all — Get all PDFs (Admin only)
+- DELETE /api/pdf/:subjectId/:pdfId — Delete PDF (Admin only)
 
 🧪 Testing
-Use Postman to test all endpoints. Auth-protected routes require a valid JWT token with admin role.
+Use Postman to test all endpoints. Auth-protected routes require a valid JWT token with the admin role.
 
-📊 Roadmap
-- Day 5: PDF Upload
-- Day 6: Enrollment System
-- Day 7: Access Control & Cleanup
-- Day 8: Search & Filter System
+
 
 🧙‍♂️ Author
-Arsalan 
-
+Arsalan
