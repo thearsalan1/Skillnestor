@@ -84,7 +84,68 @@ npm run dev
 🧪 Testing
 Use Postman to test all endpoints. Auth-protected routes require a valid JWT token with the admin role.
 
+📘 SkillNester LMS Frontend Milestones 
 
+🏠 1. Home Page (/)
+- Hero section with tagline and CTA buttons
+- Buttons: Login, Explore Courses
+- Fetch featured courses from GET /api/courses
+- Route to /courses on click
+
+🔐 2. Login Page (/login)
+- Login form with email/password
+- Connect to POST /api/auth/login
+- Store JWT in localStorage
+- Redirect based on role:
+- Admin → /admin/dashboard
+- User → /courses
+
+📚 3. Courses Page (/courses)
+- Fetch all courses from GET /api/courses
+- Display course cards with title + description
+- On click → route to /courses/:id
+
+📘 4. Course Detail Page (/courses/:id)
+- Fetch subjects for course via GET /api/subjects/course/:courseId
+- Display subject cards with title + description
+- On click → route to /subjects/:id
+
+📄 5. Subject Detail Page (/subjects/:id)
+- Fetch PDFs via GET /api/pdf/:subjectId
+- Display list of PDFs with download/view buttons
+- Secure access: only logged-in users can view
+
+🧑‍💼 6. Admin Dashboard (/admin/dashboard)
+- Overview of courses, subjects, and PDFs
+- Navigation to:
+- /admin/courses
+- /admin/subjects
+- /admin/pdfs
+
+🧑‍🏫 7. Admin Course Management (/admin/courses)
+- Create course via POST /api/courses
+- Delete course via DELETE /api/courses/:id
+- Display all courses with action buttons
+
+📘 8. Admin Subject Management (/admin/subjects)
+- Create subject via POST /api/subjects
+- Delete subject via DELETE /api/subjects/:id
+- Filter subjects by course
+
+📄 9. Admin PDF Management (/admin/pdfs)
+- View all PDFs via GET /api/pdf/admin/all
+- Delete PDF via DELETE /api/pdf/:subjectId/:pdfId
+- Upload PDF via POST /api/pdf/:subjectId using FormData
+
+🚫 10. 404 Page (*)
+- Catch-all for invalid routes
+- Message: “Page not found. Return to home.”
+
+📄 Created Frontend Pages
+- Home Page 
+- Login Page
+- Register Page
+- Forgot Password Page
 
 🧙‍♂️ Author
 Arsalan
