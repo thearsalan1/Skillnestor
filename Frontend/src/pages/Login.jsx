@@ -1,20 +1,49 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import loginImg from "../assets/loginImage.png";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "sonner";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
-  const handleOnClick = (e) => {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+  const handleOnClick = async (e) => {
     e.preventDefault();
-    console.log(email);
-    console.log(password);
-    navigate("/course");
+    setLoading(true);
+    try {
+      const res = await axios.post(`${backendUrl}/api/auth/login`, {
+        email,
+        password,
+      });
+
+      const token = res.data.token;
+      localStorage.setItem("token", token);
+
+      toast.success("Login successful! 🎉");
+      navigate("/course");
+    } catch (err) {
+      const message =
+        err.response?.data?.message || err.message || "Unknown error";
+      console.error("Login failed:", message);
+      toast.error(`Login failed: ${message}`);
+    }
     setEmail("");
     setPassword("");
+    setLoading(false);
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/course");
+    }
+  }, []);
   return (
     <div className="min-w-screen flex items-center justify-center min-h-screen bg-gradient-to-br bg-gradient-to-br from-blue-950 to-white">
       <div className="flex flex-row w-[900px] h-[500px] bg-white/10 backdrop-blur-xl border border-white/30 rounded-xl shadow-lg">
@@ -76,9 +105,10 @@ const Login = () => {
             </div>
             <button
               type="submit"
+              disabled={loading}
               className="bg-gradient-to-r from-blue-700 to-blue-500 p-2 w-full rounded-md text-white text-lg cursor-pointer hover:from-blue-600 hover:to-blue-400 transition-all duration-300 shadow-md"
             >
-              Continue
+              {loading ? "Logging in..." : "Continue"}
             </button>
           </form>
         </div>

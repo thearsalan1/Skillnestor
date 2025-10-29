@@ -3,6 +3,7 @@ backend/node_modules/
 
 # Environment variables
 backend/.env
+frontend/.env
 
 # Logs
 backend/logs/
@@ -22,7 +23,8 @@ backend/dist/
 backend/build/
 
 # Upload PDF folder
-backend/Upload
+backend/Uploads
 
 # goals and planning
 notes
+

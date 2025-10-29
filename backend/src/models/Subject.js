@@ -19,6 +19,7 @@ const SubjectSchema = new mongoose.Schema(
     pdfs: [
       {
         originalname: String,
+        description: String,
         url: String,
         uploadedAt: { type: Date, default: Date.now },
       },

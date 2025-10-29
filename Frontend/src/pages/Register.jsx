@@ -1,18 +1,48 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import registerImage from "../assets/registerImage.png";
+import axios from "axios";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const backend = import.meta.env.VITE_BACKEND_URL;
+  const [loading, setLoading] = useState(false);
 
-  const handleOnClick = (e) => {
+  const handleOnClick = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    try {
+      const res = await axios.post(`${backend}/api/auth/register`, {
+        name,
+        email,
+        password,
+      });
+      toast.success("Registration successfull");
+      const token = res.data.token;
+      localStorage.setItem("token", token);
+      setTimeout(() => navigate("/course"), 1000);
+    } catch (err) {
+      const message =
+        err.response?.data?.message || err.message || "Unknown error";
+      toast.error(`Registration failed: ${message}`);
+    }
     console.log(name, email, password);
     setName("");
     setEmail("");
     setPassword("");
+    setLoading(false);
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/course");
+    }
+  }, []);
   return (
     <div className="min-w-screen flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-950 to-white">
       <div className="flex flex-row w-[900px] h-[550px] bg-white/10 backdrop-blur-xl border border-white/30 rounded-xl shadow-lg">
@@ -82,9 +112,10 @@ const Register = () => {
             </div>
             <button
               type="submit"
+              disabled={loading}
               className="bg-gradient-to-r from-blue-700 to-blue-500 p-2 w-full rounded-md text-white text-lg cursor-pointer hover:from-blue-600 hover:to-blue-400 transition-all duration-300 shadow-md"
             >
-              Continue
+              {loading ? "Registering...." : "Continue"}
             </button>
           </form>
         </div>
