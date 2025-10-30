@@ -1,40 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import AdminHeader from "../components/AdminHeader";
+import useAdminStore from "../Store/useAdminStore";
 
 const AdminHomePage = () => {
-  const users = [
-    {
-      userId: "001",
-      name: "Arsalan",
-      role: "Frontend Auteur",
-      email: "arsalan@skillnester.com",
-    },
-    {
-      userId: "002",
-      name: "Riya",
-      role: "UX Designer",
-      email: "riya@skillnester.com",
-    },
-    {
-      userId: "003",
-      name: "Kabir",
-      role: "Backend Architect",
-      email: "kabir@skillnester.com",
-    },
-    {
-      userId: "004",
-      name: "Meera",
-      role: "Content Strategist",
-      email: "meera@skillnester.com",
-    },
-    {
-      userId: "005",
-      name: "Zoya",
-      role: "QA Analyst",
-      email: "zoya@skillnester.com",
-    },
-  ];
+  const {
+    getAllUsers,
+    users,
+    courses,
+    loadAdminData,
+    subjects,
+    fetchSubjects,
+  } = useAdminStore();
 
+  useEffect(() => {
+    getAllUsers();
+    loadAdminData();
+    fetchSubjects();
+  }, []);
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-950 to-white">
       <header>
@@ -47,12 +29,12 @@ const AdminHomePage = () => {
             {[
               {
                 title: "Courses Dashboard",
-                count: 100,
+                count: courses.length,
                 link: "/admin/courses",
               },
               {
                 title: "Subjects Dashboard",
-                count: 100,
+                count: subjects.length,
                 link: "/admin/subjects",
               },
               {
@@ -77,6 +59,7 @@ const AdminHomePage = () => {
                 >
                   Manage
                 </a>
+              
               </div>
             ))}
           </div>
@@ -94,11 +77,8 @@ const AdminHomePage = () => {
               </thead>
               <tbody className="text-white text-sm sm:text-base">
                 {users.map((user) => (
-                  <tr
-                    key={user.userId}
-                    className="bg-gray-900 hover:bg-gray-800"
-                  >
-                    <td className="px-4 py-2">{user.userId}</td>
+                  <tr key={user._id} className="bg-gray-900 hover:bg-gray-800">
+                    <td className="px-4 py-2">{user._id}</td>
                     <td className="px-4 py-2">{user.name}</td>
                     <td className="px-4 py-2">{user.role}</td>
                     <td className="px-4 py-2">{user.email}</td>
