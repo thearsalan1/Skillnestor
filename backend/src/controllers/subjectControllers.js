@@ -17,7 +17,7 @@ const createSubject = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Course not found" });
     }
-    
+
     const subject = new Subject({
       title,
       description,

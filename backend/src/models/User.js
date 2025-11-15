@@ -24,17 +24,24 @@ const UserSchema = new mongoose.Schema(
       enum: ["student", "admin"],
       default: "student",
     },
-    otp: String,
-    otpExpiry: Date,
+    otp: {
+      type: String,
+      default: null,
+    },
+    otpExpiry: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-// Password hasing middleware
+// Password hashing middleware
 UserSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
+
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
   next();

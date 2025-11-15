@@ -4,41 +4,46 @@ import logo from "../assets/Logo.jpg";
 const AdminHeader = () => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const navLinks = [
+    { label: "Home", href: "/course" },
+    { label: "Dashboard", href: "/admin" },
+    { label: "Courses", href: "/admin/courses" },
+    { label: "Subjects", href: "/admin/subjects" },
+    { label: "Notes", href: "/admin/notes" },
+  ];
+
   return (
-    <header className="bg-blue-950 text-white">
+    <header className="bg-blue-950 text-white shadow-md">
       <div className="max-w-screen-xl mx-auto px-4 py-3 flex justify-between items-center">
         {/* Logo */}
         <a href="/" className="flex items-center">
           <img
             src={logo}
             alt="SkillNester Logo"
-            className="w-[150px] sm:w-[180px] lg:w-[200px]"
+            className="w-[160px] sm:w-[200px] lg:w-[220px] transition-all duration-300"
           />
         </a>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex gap-8 text-base lg:text-lg pr-4">
-          <a href="/course" className="hover:text-blue-300 transition">
-            Home
-          </a>
-          <a href="/admin/courses" className="hover:text-blue-300 transition">
-            Courses
-          </a>
-          <a href="/admin/subjects" className="hover:text-blue-300 transition">
-            Subjects
-          </a>
-          <a href="/admin/notes" className="hover:text-blue-300 transition">
-            Notes
-          </a>
+        <nav className="hidden md:flex gap-8 text-base lg:text-lg font-medium">
+          {navLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="hover:text-blue-300 transition-colors duration-200"
+            >
+              {link.label}
+            </a>
+          ))}
         </nav>
 
         {/* Mobile Toggle */}
         <button
-          className="md:hidden focus:outline-none"
+          className="md:hidden p-2 rounded-md hover:bg-blue-900 transition"
           onClick={() => setIsOpen(!isOpen)}
         >
           <svg
-            className="w-6 h-6 text-white"
+            className="w-6 h-6"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -64,19 +69,16 @@ const AdminHeader = () => {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <nav className="md:hidden px-4 pb-4 flex flex-col gap-3 text-base bg-blue-900">
-          <a href="/course" className="hover:text-blue-300 transition">
-            Home
-          </a>
-          <a href="/admin/courses" className="hover:text-blue-300 transition">
-            Courses
-          </a>
-          <a href="/admin/subjects" className="hover:text-blue-300 transition">
-            Subjects
-          </a>
-          <a href="/admin/notes" className="hover:text-blue-300 transition">
-            Notes
-          </a>
+        <nav className="md:hidden bg-blue-900 px-4 pb-4 flex flex-col gap-3 text-base font-medium">
+          {navLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="hover:text-blue-300 transition-colors duration-200"
+            >
+              {link.label}
+            </a>
+          ))}
         </nav>
       )}
     </header>

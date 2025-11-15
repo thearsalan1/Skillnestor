@@ -53,7 +53,6 @@ export const deleteSubjectApi = (id) => {
 
 export const addSubjectApi = ({ title, description, course }) => {
   const token = localStorage.getItem("token");
-  console.log(title, description, course);
 
   return axios.post(
     `${backend}/api/subjects`,
@@ -64,4 +63,35 @@ export const addSubjectApi = ({ title, description, course }) => {
       },
     }
   );
+};
+
+export const getAllpdfsAPI = () => {
+  const token = localStorage.getItem("token");
+  return axios.get(`${backend}/api/pdf/admin/all`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const addNotesApi = ({ subjectId, file }) => {
+  const token = localStorage.getItem("token");
+
+  const formData = new FormData();
+  formData.append("pdf", file);
+  return axios.post(`${backend}/api/subjects/upload/${subjectId}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const deletePdfApi = ({ subjectId, pdfId }) => {
+  const token = localStorage.getItem("token");
+  return axios.delete(`${backend}/api/pdf/${subjectId}/${pdfId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };

@@ -19,3 +19,54 @@
     background-position: 0% center;
   }
 }
+
+/* Smooth bounce */
+@keyframes bounce-slow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 3s ease-in-out infinite;
+}
+
+/* Fade in Up */
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards;
+}
+
+/* Heading Shine Effect */
+/* .heading-shine {
+  position: relative;
+  display: inline-block;
+  background: linear-gradient(90deg, #ffffff 0%, #0d47a1 50%, #ffffff 100%);
+  background-size: 200%;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: shine 4s linear infinite;
+}
+
+@keyframes shine {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+} */

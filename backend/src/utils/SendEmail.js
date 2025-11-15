@@ -12,16 +12,18 @@ const sendEmail = async (to, subject, text) => {
   });
 
   const mailOptions = {
-    from: `"Skillnestor Support" <${process.env.EMAIL_USER}>`,
+    from: `"Skillnestor Support" <${process.env.EMAIL_FROM}>`,
     to,
     subject,
     text,
   };
+
   try {
     await transporter.sendMail(mailOptions);
-    console.log("Email sent successfully");
+    return true;
   } catch (error) {
-    console.error("Email sending failed:", error);
+    console.error("✗ Email sending failed:", error.message);
+    return false;
   }
 };
 

@@ -6,13 +6,18 @@ import {
   deleteSubjectApi,
   fetchCourses,
   fetchSubjectsAPI,
+  getAllpdfsAPI,
   getAllUsersAPI,
+  addNotesApi,
+  deletePdfApi,
 } from "../services/services";
+import { toast } from "sonner";
 
 const useAdminStore = create((set) => ({
   courses: [],
   users: [],
   subjects: [],
+  pdfs: [],
   isLoading: false,
 
   loadAdminData: async () => {
@@ -120,6 +125,53 @@ const useAdminStore = create((set) => ({
     } catch (error) {
       console.error("Failed to add subject", error);
       throw error;
+    }
+  },
+
+  getAllpdfs: async () => {
+    try {
+      const res = await getAllpdfsAPI();
+      if (!res.data?.success) throw new Error("PDFs not found");
+      console.log(res.data);
+      set({ pdfs: res.data.data });
+      return res.data.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  },
+
+  uploadNotes: async ({ subjectId, file }) => {
+    try {
+      const res = await addNotesApi({ subjectId, file });
+      console.log("📦 Upload response:", res.data);
+
+      if (!res.data.success || !res.data.data) {
+        throw new Error("Unexpected response format");
+      }
+
+      const newPdf = res.data.data;
+      set((state) => ({
+        pdfs: [...state.pdfs, newPdf],
+      }));
+
+      return res.data;
+    } catch (error) {
+      console.error("Failed to upload notes:", error);
+      throw error;
+    }
+  },
+
+  deletePdf: async ({ subjectId, pdfId }) => {
+    try {
+      await deletePdfApi({ subjectId, pdfId });
+      set((state) => ({
+        pdfs: state.pdfs.filter((pdf) => pdf._id !== pdfId),
+      }));
+      toast.success("PDF deleted successfully");
+    } catch (error) {
+      console.error("Failed to delete PDF:", error);
+      toast.error("Failed to delete PDF");
     }
   },
 }));

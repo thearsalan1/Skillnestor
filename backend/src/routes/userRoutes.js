@@ -9,5 +9,4 @@ const router = express.Router();
 // @Access Private/Admin
 router.get("/", protect, admin, getAllUser);
 
-
 module.exports = router;

@@ -1,40 +1,61 @@
+const path = require("path");
+const cloudinary = require("../config/cloudinary");
 const Subject = require("../models/Subject");
+const fs = require("fs");
 
-exports.uploadPdfToSubject = async (req, res) => {
+exports.uploadPdf = async (req, res) => {
   try {
-    const subjectId = req.params.subjectId;
-
     if (!req.file) {
-      return res.status(400).json({
-        success: false,
-        message: "No PDF file uploaded",
-      });
+      return res
+        .status(400)
+        .json({ success: false, message: "No file uploaded" });
     }
 
-    const filePath = req.file.path.replace(/\\/g, "/");
+    const { subjectId } = req.params;
+
+    // Remove extension and sanitize for Cloudinary
+    const fileNameWithoutExt = path
+      .parse(req.file.originalname)
+      .name.replace(/\s+/g, "_");
+
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      folder: "SkillNester_PDFs",
+      resource_type: "raw",
+      use_filename: true,
+      unique_filename: false,
+      public_id: fileNameWithoutExt, // Cloudinary-safe name
+    });
+
+    fs.unlinkSync(req.file.path);
+
+    const uploadedPdf = {
+      originalname: req.file.originalname,
+      url: result.secure_url,
+      public_id: result.public_id, // THIS will now exist
+      uploadedAt: new Date(),
+    };
 
     const subject = await Subject.findById(subjectId);
     if (!subject) {
-      return res.status(404).json({
-        success: false,
-        message: "Subject not found",
-      });
+      return res
+        .status(404)
+        .json({ success: false, message: "Subject not found" });
     }
 
-    // Push new PDF object into the array
-    subject.pdfs.push({
-      originalname: req.file.originalname,
-      url: filePath,
-    });
-
+    subject.pdfs.push(uploadedPdf);
     await subject.save();
 
     res.status(200).json({
       success: true,
       message: "PDF uploaded successfully",
-      data: subject.pdfs,
+      data: uploadedPdf,
     });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+  } catch (err) {
+    console.error("❌ Upload Error:", err);
+    res.status(500).json({
+      success: false,
+      message: "Failed to upload PDF",
+      error: err.message,
+    });
   }
 };

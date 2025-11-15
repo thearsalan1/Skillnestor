@@ -1,6 +1,7 @@
 const Subject = require("../models/Subject");
+const cloudinary = require("../config/cloudinary");
 
-// get  All pdfs for admin dashboard
+// Get all PDFs for admin dashboard
 const getAllPdfForAdmin = async (req, res) => {
   try {
     const subjects = await Subject.find({});
@@ -13,12 +14,12 @@ const getAllPdfForAdmin = async (req, res) => {
     );
     res.status(200).json({ success: true, data: allPdfs });
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching all PDFs:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 
-// Get pdf by of the subject
+// Get PDFs by subject
 const getPdfBySubject = async (req, res) => {
   try {
     const subject = await Subject.findById(req.params.subjectId);
@@ -36,52 +37,83 @@ const getPdfBySubject = async (req, res) => {
 
     res.status(200).json({ success: true, data: subject.pdfs });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 
-// delete pdf
+// Helper function to extract public_id from Cloudinary URL
+const extractPublicIdFromUrl = (url) => {
+  try {
+    const urlParts = url.split("/upload/");
+    if (urlParts.length < 2) return null;
+
+    const afterUpload = urlParts[1];
+    const withoutVersion = afterUpload.replace(/^v\d+\//, ""); 
+
+    return withoutVersion;
+  } catch (error) {
+    return null;
+  }
+};
+
+// Delete PDF from MongoDB and Cloudinary
 const deletePdf = async (req, res) => {
   try {
-    const subject = await Subject.findById(req.params.subjectId);
+    const { subjectId, pdfId } = req.params;
+
+    const subject = await Subject.findById(subjectId);
     if (!subject) {
       return res
         .status(404)
         .json({ success: false, message: "Subject not found" });
     }
 
-    const pdfId = req.params.pdfId;
+    const pdf = subject.pdfs.id(pdfId);
+    if (!pdf) {
+      return res.status(404).json({ success: false, message: "PDF not found" });
+    }
 
-    const initialLength = subject.pdfs.length;
-    const fs = require("fs");
-    const path = require("path");
+    let publicId = pdf.public_id;
 
-    const deletedPdf = subject.pdfs.find((pdf) => pdf._id.toString() === pdfId);
-    if (deletedPdf) {
-      const filePath = path.join(__dirname, "..", deletedPdf.url);
-      fs.unlink(filePath, (err) => {
-        if (err) console.error("Failed to delete file:", err.message);
+    if (!publicId && pdf.url) {
+      publicId = extractPublicIdFromUrl(pdf.url);
+    }
+
+    if (!publicId) {
+      return res.status(400).json({
+        success: false,
+        message: "Cannot determine Cloudinary public_id for deletion",
       });
     }
-    subject.pdfs = subject.pdfs.filter((pdf) => pdf._id.toString() !== pdfId);
 
-    if (subject.pdfs.length === initialLength) {
-      return res
-        .status(404)
-        .json({ success: false, message: "PDF not found in subject" });
-    }
 
+    const cloudRes = await cloudinary.uploader.destroy(publicId, {
+      resource_type: "raw",
+    });
+
+
+    pdf.deleteOne();
     await subject.save();
+
+    const message =
+      cloudRes.result === "ok"
+        ? "PDF deleted successfully from both database and Cloudinary"
+        : cloudRes.result === "not found"
+          ? "PDF removed from database (file not found in Cloudinary)"
+          : "PDF removed from database (Cloudinary deletion uncertain)";
 
     res.status(200).json({
       success: true,
-      message: "PDF deleted successfully",
-      data: subject.pdfs,
+      message,
+      cloudinaryResult: cloudRes.result,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    console.error("Delete error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
   }
 };
 

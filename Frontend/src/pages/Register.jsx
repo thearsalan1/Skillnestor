@@ -8,9 +8,9 @@ const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const backend = import.meta.env.VITE_BACKEND_URL;
-  const [loading, setLoading] = useState(false);
 
   const handleOnClick = async (e) => {
     e.preventDefault();
@@ -21,16 +21,19 @@ const Register = () => {
         email,
         password,
       });
-      toast.success("Registration successfull");
+      toast.success("Registration successful 🎉");
+
       const token = res.data.token;
+      const role = res.data.user.role;
       localStorage.setItem("token", token);
+      localStorage.setItem("role", role);
+
       setTimeout(() => navigate("/course"), 1000);
     } catch (err) {
       const message =
         err.response?.data?.message || err.message || "Unknown error";
       toast.error(`Registration failed: ${message}`);
     }
-    console.log(name, email, password);
     setName("");
     setEmail("");
     setPassword("");
@@ -39,93 +42,81 @@ const Register = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      navigate("/course");
-    }
+    if (token) navigate("/course");
   }, []);
+
   return (
-    <div className="min-w-screen flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-950 to-white">
-      <div className="flex flex-row w-[900px] h-[550px] bg-white/10 backdrop-blur-xl border border-white/30 rounded-xl shadow-lg">
-        {/* Left Side: Form */}
-        <div className="w-1/2 text-center py-3 px-9">
-          <h1 className="font-bold text-gray-900 text-5xl tracking-wider">
+    <div className="min-h-screen w-full bg-gradient-to-br from-blue-950 via-indigo-900 to-purple-900 flex items-center justify-center px-4 py-10">
+      <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white/10 backdrop-blur-2xl border border-white/20 rounded-2xl shadow-2xl overflow-hidden">
+        {/* LEFT: FORM */}
+        <div className="w-full md:w-1/2 p-8 sm:p-10 flex flex-col justify-center">
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-white drop-shadow-lg">
             SkillNester
           </h1>
-          <p className="text-xl text-gray-700 mt-4 tracking-tight">
-            Welcome mate👋!! <br /> Enter your details to register
+          <p className="text-blue-200 mt-2 text-lg sm:text-xl">
+            Welcome 👋! Enter your details to register
           </p>
 
-          <form className="text-left py-2" onSubmit={(e) => handleOnClick(e)}>
-            <label htmlFor="name" className="block text-lg text-gray-900 mb-2">
+          <form className="mt-6 flex flex-col" onSubmit={handleOnClick}>
+            <label className="text-white/80 text-sm sm:text-base mb-1">
               Name
             </label>
             <input
               type="text"
               required
               value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-              }}
-              className="w-full p-2 rounded-md border border-white/20 outline-none text-gray-100 text-lg bg-blue-900/30 backdrop-blur-md mb-3 placeholder-white/70"
+              onChange={(e) => setName(e.target.value)}
               placeholder="Enter your name"
+              className="w-full p-3 rounded-lg mb-4 bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
             />
 
-            <label htmlFor="email" className="block text-lg text-gray-900 mb-2">
+            <label className="text-white/80 text-sm sm:text-base mb-1">
               Email
             </label>
             <input
               type="email"
               required
               value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
-              className="w-full p-2 rounded-md border border-white/20 outline-none text-gray-100 text-lg bg-blue-900/30 backdrop-blur-md mb-3 placeholder-white/70"
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
+              className="w-full p-3 rounded-lg mb-4 bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
             />
 
-            <label
-              htmlFor="password"
-              className="block text-lg text-gray-900 mb-2"
-            >
+            <label className="text-white/80 text-sm sm:text-base mb-1">
               Password
             </label>
             <input
               type="password"
               required
               value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
-              className="w-full p-2 rounded-md border border-white/20 outline-none text-gray-100 text-lg bg-blue-900/30 backdrop-blur-md mb-3 placeholder-white/70"
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
+              className="w-full p-3 rounded-lg mb-4 bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
             />
 
-            <div className="flex flex-col gap-2 mt-2">
-              <a
-                href="/login"
-                className="text-sm text-gray-700 hover:underline hover:text-blue-500 transition duration-300  mb-4"
-              >
+            <div className="flex flex-col sm:flex-row sm:justify-between gap-2 mb-6 text-sm text-white/80">
+              <a href="/login" className="hover:text-cyan-400 transition">
                 Already have an account?{" "}
-                <span className="font-semibold text-blue-600">Sign In</span>
+                <span className="font-semibold">Sign In</span>
               </a>
             </div>
+
             <button
               type="submit"
               disabled={loading}
-              className="bg-gradient-to-r from-blue-700 to-blue-500 p-2 w-full rounded-md text-white text-lg cursor-pointer hover:from-blue-600 hover:to-blue-400 transition-all duration-300 shadow-md"
+              className="w-full p-3 rounded-lg bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 text-white font-semibold shadow-lg hover:shadow-2xl hover:-translate-y-1 transition"
             >
-              {loading ? "Registering...." : "Continue"}
+              {loading ? "Registering..." : "Continue"}
             </button>
           </form>
         </div>
 
-        {/* Right Side: Image */}
-        <div className="w-1/2">
+        {/* RIGHT: IMAGE (HIDDEN ON SMALL SCREENS) */}
+        <div className="hidden md:block w-1/2 h-64 md:h-auto">
           <img
             src={registerImage}
             alt="Register Visual"
-            className="object-cover h-full rounded-tr-xl rounded-br-xl opacity-70"
+            className="w-full h-full object-cover opacity-90"
           />
         </div>
       </div>

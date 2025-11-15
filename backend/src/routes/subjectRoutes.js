@@ -6,8 +6,8 @@ const {
   deleteSubject,
 } = require("../controllers/subjectControllers");
 const { protect, admin } = require("../middlewares/roleMiddleware");
-const { uploadPdfToSubject } = require("../controllers/uploadController");
-const upload = require("../middlewares/upload");
+const { uploadPdf } = require("../controllers/uploadController"); // ✅ Fixed
+const upload = require("../utils/cloudinaryUpload");
 
 const router = express.Router();
 
@@ -31,15 +31,15 @@ router.get("/", protect, admin, getAllSubjects);
 // @Access Private/Admin
 router.delete("/:id", protect, admin, deleteSubject);
 
-// @UploadPDF POST /api/subjects/uplaod/:subjectId
-// @desc Post req to uplaad notes pdf
+// @UploadPDF POST /api/subjects/upload/:subjectId
+// @desc Post req to upload notes pdf
 // @Access Private/Admin
 router.post(
   "/upload/:subjectId",
   protect,
   admin,
   upload.single("pdf"),
-  uploadPdfToSubject
+  uploadPdf
 );
 
 module.exports = router;
