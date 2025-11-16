@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import logo from "../assets/Logo.jpg";
+import logo from "../assets/logo.jpg";
 
 const AdminHeader = () => {
   const [isOpen, setIsOpen] = useState(false);
