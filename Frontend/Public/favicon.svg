@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-labelledby="t2">
+  <title id="t2">SkillNestor</title>
+
+  <defs>
+    <linearGradient id="gradSn" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4F46E5"/>
+      <stop offset="100%" stop-color="#06B6D4"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="64" height="64" rx="14" fill="#0F172A"/>
+
+  <!-- Interlocked SN -->
+  <path d="M18 22c2-6 9-10 15-10s13 4 15 10-1 10-6 12l-10 4c-5 2-8 4-8 8 0 6 7 10 13 10s12-4 14-10"
+        fill="none" stroke="url(#gradSn)" stroke-width="5" stroke-linecap="round"/>
+
+  <path d="M26 20v24l12-18v18"
+        fill="none" stroke="#FFFFFF" stroke-width="4.2" stroke-linecap="round"/>
+</svg>
