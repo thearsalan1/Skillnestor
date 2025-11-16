@@ -10,9 +10,13 @@ const pdfRoutes = require("./src/routes/pdfRoutes");
 const userRoutes = require("./src/routes/userRoutes");
 
 const app = express();
-app.use(cors());
 app.use(express.json());
-
+app.use(
+  cors({
+    origin: ["https://skillnestor-bice.vercel.app"],
+    credentials: true,
+  })
+);
 app.use("/api/test", testRoutes);
 app.use("/api/courses", coursesRoutes);
 app.use("/api/auth", authRoutes);
